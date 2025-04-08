@@ -1,0 +1,25 @@
+version: '3'
+
+services:
+  gateway:
+    build: .
+    container_name: gateway
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+    depends_on:
+      - auth
+
+  auth:
+    build:
+      context: ../auth
+    container_name: auth
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../auth:/app
+    working_dir: /app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
